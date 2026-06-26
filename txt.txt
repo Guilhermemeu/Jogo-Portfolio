@@ -1,0 +1,74 @@
+// let NewElementId = 1
+// document.addEventListener("click", () => {
+//     NewElement = document.createElement("div")
+//     NewElement.id = NewElementId
+//     NewElement.classList.add("boxmensagem");
+
+//     console.log(NewElementId)
+//     NewElementId += 1
+// })
+
+//  no edit mode mostra onde vai ser construida
+let BuildPreview = document.getElementById("build-preview");
+
+let OldMXIG = 0;
+let OldMYIG = 0;
+let LastElement = false;
+
+document.addEventListener("mousemove",)
+
+const edit_mode_preview = () => {
+    if (EditMode == false) {
+        return
+    }
+
+    switch (EditMode) {
+        case "Create":
+
+            let MouseXInGrid = get_grid_position(MouseX + window.scrollX, 100);
+            let MouseYInGrid = get_grid_position(MouseY + window.scrollY, 100);
+
+
+            if (MouseXInGrid != OldMXIG || MouseYInGrid != OldMYIG) {
+
+                if (LastElement) {
+                    LastElement.remove()
+                }
+                OldMXIG = MouseXInGrid;
+                OldMYIG = MouseYInGrid;
+
+                // Criação e indexação
+                let NewElement = document.createElement("div")
+                NewElement.id = "BuildPreview"
+
+                //Estilo e Posição
+                NewElement.classList.add("build-preview");
+                NewElement.style.left = MouseXInGrid + 'px'
+                NewElement.style.top = MouseYInGrid + 'px'
+                NewElement.style.width = 100 + 'px'
+                NewElement.style.height = 100 + 'px'
+
+                for (let Object in Collisions) {
+                    let v = Collisions[Object]
+
+                    if (Math.floor(v.Top) === MouseYInGrid && Math.floor(v.Left) === MouseXInGrid) {
+                        console.log("it's in the same position")
+                        CanBuild = false
+                        NewElement.style.backgroundColor = "red"
+                        BuildPreview.appendChild(NewElement)
+                        console.log(CanBuild)
+                        break;
+                    } else {
+                        CanBuild = true;
+                    }
+                }
+                BuildPreview.appendChild(NewElement)
+
+                LastElement = document.getElementById("BuildPreview")
+                OldMXIG = MouseXInGrid;
+                OldMYIG = MouseYInGrid;
+
+            }
+            break;
+    }
+}

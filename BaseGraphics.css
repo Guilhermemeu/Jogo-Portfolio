@@ -1,0 +1,96 @@
+img {
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+
+body {
+    overflow: hidden;
+
+
+    color: rgb(0, 0, 0);
+    background-color: black;
+    background-image: url("Sprites/Background/BackgroundXP.png");
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.player {
+    height: 64px;
+    width: 64px;
+    border-radius: 5px;
+    background-color: red;
+    position: absolute;
+    transition: left 0.1s linear;
+    z-index: 3;
+}
+
+.floor {
+    height: 48px;
+    width: 120%;
+    background-color: #245DDA;
+    top: 95%;
+    position: absolute;
+    margin-left: -60px;
+    z-index: 2;
+}
+
+.lightfloor {
+    height: 250px;
+    width: 120%;
+    background-color: #336ae2;
+    top: 94%;
+    position: absolute;
+    margin-left: -60px;
+    z-index: 1;
+}
+
+.button-windows {
+
+    position: absolute;
+    top: 94.3%;
+    z-index: 3;
+    margin-left: -7px;
+
+}
+
+.taskbar-separator {
+    position: absolute;
+    top: 95%;
+    z-index: 3;
+    margin-left: 120px;
+}
+
+.Shortcuts {
+    position: absolute;
+    top: 10%;
+    z-index: 5;
+}
+
+.icon-pattern {
+    width: 64px;
+    height: 64px;
+    z-index: 5;
+}
+
+.icon-name {
+    color: white;
+    width: auto;
+    text-align: center;
+    margin-top: -1px;
+}
+
+
+.new-floor {
+    background-color: rgb(55, 0, 128);
+    position: absolute;
+}
+
+.build-preview {
+    background-color: green;
+    position: absolute;
+    opacity: 0.3;
+    z-index: 4;
+}
