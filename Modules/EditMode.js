@@ -145,7 +145,7 @@ export function edit_mode_click() {
             let NewElement = `
             <div id="${NewElementId}" style="position: absolute; left:${left}; top:${top};" name="Sample">
             `+ BuildTab;
-            
+
             FloorContainer.insertAdjacentHTML('beforeend', NewElement)
 
             let Element = document.getElementById(String(NewElementId))
@@ -159,6 +159,10 @@ export function edit_mode_click() {
             break;
         case "Stretch":
             break;
+
+        default:
+            alert("Mode Not Detected")
+            break
     }
 
 }
