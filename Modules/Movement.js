@@ -1,3 +1,4 @@
+
 let posX = 950;
 let posY = 0;
 
@@ -37,119 +38,92 @@ add_colision_data(BaseFloor)
 
 //Fim colisões
 
-function check_colisions(Side, PlayerPosition) {
-    switch (Side) {
-        case "top":
-            for (let i = 0; i < Collisions.length; i++) {
-                let Value = Collisions[i]
-                if (PlayerPosition <= Value.Bottom) continue;
-                return Value
-            }
-            return null;
-            break
-        case "bottom":
-
-            for (let i = 0; i < Collisions.length; i++) {
-                let Value = Collisions[i]
-                if (PlayerPosition >= Value.Top) continue;
-                return Value
-            }
-            return null;
-            break
-        case "left":
-            for (let i = 0; i < Collisions.length; i++) {
-                let Value = Collisions[i]
-                if (PlayerPosition <= Value.Right) continue;
-                return Value
-            }
-            return null
-            break
-        case "right":
-            for (let i = 0; i < Collisions.length; i++) {
-                let Value = Collisions[i]
-                if (PlayerPosition >= Value.Left) continue;
-                return Value
-            }
-            return null
-            break
-
-        default:
-            alert("Using this function wrong")
-            break;
-    }
+function getPlayerSize() {
+    const rect = Player.getBoundingClientRect();
+    return { width: rect.width, height: rect.height };
 }
 
+function get_side(X, Y) {
+    if (X) { if (Math.sign(X) == 1) { return "right" } else { return "left" } }
+    if (Y) { if (Math.sign(Y) == 1) { return "down" } else { return "up" } }
+    return false
+}
 
-const PlayerWidth = Player.offsetWidth;
-const PlayerHeight = Player.offsetHeight;
-
-// Função do calculo de colisão
 export function place_meeting(offsetX, offsetY) {
 
-    const Pleft = posX + offsetX
-    const Pright = posX + PlayerWidth + offsetX
-    const Ptop = posY + offsetY
-    const Pbottom = posY + PlayerHeight + offsetY
+    const { width: PlayerWidth, height: PlayerHeight } = getPlayerSize()
 
-    // objetivo aqui é verificar a colisão de acordo com offset para otimizar
-    // Ideia 1: criar switch case com loops for
-    // Ideia 2: fazer a mesma coisa do 1 só que com funções de fora
+    const pLeft = posX + offsetX;
+    const pRight = posX + PlayerWidth + offsetX;
+    const pTop = posY + offsetY;
+    const pBottom = posY + PlayerHeight + offsetY;
 
-    if (offsetX) {
-        if (offsetX > 0) {
-            check_colisions("right", Pright)
-        }
-        if (offsetX < 0) {
-            check_colisions("left", Pleft)
+    let side = get_side(offsetX, offsetY)
+
+    for (let i = 0; i < Collisions.length; i++) {
+        let collidable = Collisions[i];
+
+        //otimização para checagem inutil
+        if (side == false) { return false }
+        console.log(side)
+
+        //verifica se a colisão esta na direção correta
+        switch (side) {
+            case "right":
+                if (pRight >= collidable.Left && collidable.Left <= posX + 64) {
+                    if (pLeft <= collidable.Right && pBottom >= collidable.Top && pTop <= collidable.Bottom) {
+                        return collidable
+                    }
+                    continue
+                }
+                break
+            case "left":
+                if (pLeft <= collidable.Right) {
+                    if (pRight >= collidable.Left && pBottom >= collidable.Top && pTop <= collidable.Bottom) {
+                        return collidable
+                    }
+                    continue
+                }
+                break
+            case "down":
+                if (pBottom >= collidable.Top) {
+                    if (pRight >= collidable.Left && pLeft <= collidable.Right && pTop <= collidable.Bottom) {
+                        return collidable
+                    }
+                    continue
+                }
+                break
+            case "up":
+                if (pTop <= collidable.Bottom) {
+                    if (pRight >= collidable.Left && pLeft <= collidable.Right && pBottom >= collidable.Top) {
+                        return collidable
+                    }
+                    continue
+                }
+                break
         }
     }
-    if (offsetY) {
-        if (offsetY > 0) {
-            check_colisions("bottom", Pbottom)
-        }
-        if (offsetY < 0) {
-            check_colisions("top", Ptop)
-        }
-    }
+    return null;
 }
-
-//     for (let i = 0; i < Collisions.length; i++) {
-//         const Value = Collisions[i]
-//         if (
-//             Pbottom <= Value.Top ||
-//             Ptop >= Value.Bottom ||
-//             Pright <= Value.Left ||
-//             Pleft >= Value.Right
-//         ) continue;
-
-//         return Value
-//     }
-//     return null
-// }
 
 let Hspd = 0
 let Speed = 4
 
 // common player movement
 
-// movement do player na direção X 
-// OBS: esta ficando lento a cada colisão por conta do for do place_meeting()
+// movement do player na direção X
 export function MoveX(_Left, _Right) {
     let Xdir = -_Left + _Right;
     Hspd = Xdir * Speed;
+    let HspdSign = Math.sign(Hspd)
 
-    const hit = place_meeting(Hspd, 0);
-    if (hit) {
-        if (Hspd > 0) {
-            posX = hit.Left - PlayerWidth;
-        } else {
-            posX = hit.Right;
+    if (place_meeting(Hspd, 0)) {
+        while (!place_meeting(HspdSign, 0)) {
+            posX += HspdSign;
         }
-        Hspd = 0;
-    } else {
-        posX += Hspd;
+        Hspd = 0
     }
-
+    posX += Hspd;
     Player.style.left = posX + 'px';
 }
 
@@ -157,7 +131,7 @@ let JumpForce = -4
 let Gravity = .05;
 let Vspd = 0
 
-let TotalJumps = 1
+let TotalJumps = 2
 let Jumps = TotalJumps
 
 export function MoveY(_action) {
@@ -166,28 +140,28 @@ export function MoveY(_action) {
         if (Jumps > 0) {
             Vspd = JumpForce
             Jumps -= 1
+
+            posY += Vspd
+            Player.style.top = posY + 'px'
         }
     };
 
-    const vspdSign = Math.sign(Vspd);
-    const hitAtVspd = place_meeting(0, Vspd)
 
-    if (hitAtVspd) {
-        if (Vspd > 0) {
-            posY = hitAtVspd.Top - PlayerHeight
-        } else {
-            posY = hitAtVspd.Bottom
+
+    let VspdSign = Math.sign(Vspd)
+
+    if (place_meeting(0, Vspd)) {
+        while (!place_meeting(0, VspdSign)) {
+            posY += VspdSign;
         }
         Vspd = 0
-    } else {
-        const onGround = place_meeting(0, 1);
-
-        if (!onGround) {
-            Vspd += Gravity
-        } else {
-            Jumps = TotalJumps
-        }
-        posY += Vspd
     }
+    if (!place_meeting(0, 1)) {
+        Vspd += Gravity
+    } else {
+        Jumps = TotalJumps
+    }
+
+    posY += Vspd
     Player.style.top = posY + 'px'
 }

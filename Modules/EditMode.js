@@ -134,7 +134,7 @@ export function edit_mode_click() {
             if (CanBuild === false) { break; }
 
 
-            // //Estilo e Posição
+            //Estilo e Posição
             let width = 128
             let height = 128
 
