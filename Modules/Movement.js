@@ -21,13 +21,17 @@ export function add_colision_data(_Key) {
     let CurrentScrollX = window.scrollX
     let CurrentScrollY = window.scrollY
 
+    const centroX = Math.floor(((_KeySizes.left + _KeySizes.right) / 2 + CurrentScrollX) / 128);
+    const centroY = Math.floor(((_KeySizes.top + _KeySizes.bottom) / 2 + CurrentScrollY) / 128);
 
     Collisions.push({
         Id: _Key.id,
         Top: _KeySizes.top + CurrentScrollY,
         Bottom: _KeySizes.bottom + CurrentScrollY,
         Left: _KeySizes.left + CurrentScrollX,
-        Right: _KeySizes.right + CurrentScrollX
+        Right: _KeySizes.right + CurrentScrollX,
+        X: centroX,
+        Y: centroY
     })
     console.log(Collisions)
 }
@@ -38,7 +42,7 @@ add_colision_data(BaseFloor)
 
 //Fim colisões
 
-function getPlayerSize() {
+function get_player_size() {
     const rect = Player.getBoundingClientRect();
     return { width: rect.width, height: rect.height };
 }
@@ -49,9 +53,26 @@ function get_side(X, Y) {
     return false
 }
 
+function get_near_collisions(pX, pY) {
+    let newCollisions = Collisions.filter(Colisao =>
+        Colisao.X >= pX - 2 && Colisao.X <= pX + 2
+        &&
+        Colisao.Y >= pY - 2 && Colisao.Y <= pY + 2
+    )
+    if (newCollisions[0] != null) {
+        console.log(newCollisions)
+    }
+    return newCollisions
+}
+
+let firstFrameVar = true
+let collisionsInQuadrant
+let lastPosX = posX
+let lastPosY = posY
+
 export function place_meeting(offsetX, offsetY) {
 
-    const { width: PlayerWidth, height: PlayerHeight } = getPlayerSize()
+    const { width: PlayerWidth, height: PlayerHeight } = get_player_size()
 
     const pLeft = posX + offsetX;
     const pRight = posX + PlayerWidth + offsetX;
@@ -60,12 +81,23 @@ export function place_meeting(offsetX, offsetY) {
 
     let side = get_side(offsetX, offsetY)
 
+    let pX = Math.floor((posX + (PlayerWidth / 2)) / 128)
+    let pY = Math.floor((posY + (PlayerHeight / 2)) / 128)
+
+    if (posX >= lastPosX + 32 || posX <= lastPosX - 32 ||
+        posY >= lastPosY + 32 || posY <= lastPosY - 32 || firstFrameVar == true) {
+        if (firstFrameVar == true) {
+            firstFrameVar = false;
+        }
+        lastPosX = posX
+        lastPosY = posY
+        collisionsInQuadrant = get_near_collisions(pX, pY)
+    }
     for (let i = 0; i < Collisions.length; i++) {
         let collidable = Collisions[i];
 
         //otimização para checagem inutil
         if (side == false) { return false }
-        console.log(side)
 
         //verifica se a colisão esta na direção correta
         switch (side) {
