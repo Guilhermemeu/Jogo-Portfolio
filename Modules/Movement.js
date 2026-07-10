@@ -21,8 +21,6 @@ export function add_colision_data(_Key) {
     let CurrentScrollX = window.scrollX
     let CurrentScrollY = window.scrollY
 
-    const centroX = Math.floor(((_KeySizes.left + _KeySizes.right) / 2 + CurrentScrollX) / 128);
-    const centroY = Math.floor(((_KeySizes.top + _KeySizes.bottom) / 2 + CurrentScrollY) / 128);
 
     Collisions.push({
         Id: _Key.id,
@@ -30,8 +28,6 @@ export function add_colision_data(_Key) {
         Bottom: _KeySizes.bottom + CurrentScrollY,
         Left: _KeySizes.left + CurrentScrollX,
         Right: _KeySizes.right + CurrentScrollX,
-        X: centroX,
-        Y: centroY
     })
     console.log(Collisions)
 }
@@ -81,8 +77,8 @@ export function place_meeting(offsetX, offsetY) {
 
     let side = get_side(offsetX, offsetY)
 
-    let pX = Math.floor((posX + (PlayerWidth / 2)) / 128)
-    let pY = Math.floor((posY + (PlayerHeight / 2)) / 128)
+    // let pX = Math.floor((posX + (PlayerWidth / 2)) / 128)
+    // let pY = Math.floor((posY + (PlayerHeight / 2)) / 128)
 
     // if (posX >= lastPosX + 32 || posX <= lastPosX - 32 ||
     //     posY >= lastPosY + 32 || posY <= lastPosY - 32 || firstFrameVar == true) {
@@ -102,7 +98,7 @@ export function place_meeting(offsetX, offsetY) {
         //verifica se a colisão esta na direção correta
         switch (side) {
             case "right":
-                if (pRight >= collidable.Left && collidable.Left <= posX + 64) {
+                if (pRight >= collidable.Left) {
                     if (pLeft <= collidable.Right && pBottom >= collidable.Top && pTop <= collidable.Bottom) {
                         return collidable
                     }
@@ -149,9 +145,12 @@ export function MoveX(_Left, _Right) {
     Hspd = Xdir * Speed;
     let HspdSign = Math.sign(Hspd)
 
-    if (place_meeting(Hspd, 0)) {
-        while (!place_meeting(HspdSign, 0)) {
-            posX += HspdSign;
+    let hitX = place_meeting(Hspd, 0)
+    if (hitX) {
+        if (HspdSign > 0) {
+            posX = hitX.Left - 65
+        } else if(HspdSign < 0) {
+            posX = hitX.Right + 1
         }
         Hspd = 0
     }
@@ -181,10 +180,13 @@ export function MoveY(_action) {
 
 
     let VspdSign = Math.sign(Vspd)
+    let hitY = place_meeting(0, Vspd)
 
-    if (place_meeting(0, Vspd)) {
-        while (!place_meeting(0, VspdSign)) {
-            posY += VspdSign;
+    if (hitY) {
+        if (VspdSign > 0) {
+            posY = hitY.Top - 65
+        } else {
+            posY = hitY.Bottom + 1
         }
         Vspd = 0
     }
