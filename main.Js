@@ -18,7 +18,7 @@ import { get_grid_position } from "./Modules/GridModule.js";
 import { add_colision_data, get_collisions, MoveX, MoveY } from "./Modules/Movement.js";
 
 //  EditMode
-import { edit_mode_preview, edit_mode_click, enter_edit_mode } from "./Modules/EditMode.js";
+import { edit_mode_mousemove, edit_mode_click, enter_edit_mode } from "./Modules/EditMode.js";
 
 // -------------------- | Events | -------------------- \\
 
@@ -66,7 +66,7 @@ EditButton.addEventListener("click", enter_edit_mode)
 // Cria plataforma
 document.addEventListener("click", edit_mode_click)
 // Mexe com a preview da build
-document.addEventListener("mousemove", edit_mode_preview)
+document.addEventListener("mousemove", edit_mode_mousemove)
 
 
 const gameLoop = () => {
