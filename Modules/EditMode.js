@@ -41,7 +41,7 @@ export function enter_edit_mode() {
     }
 }
 
-export function edit_mode_preview() {
+export function edit_mode_mousemove() {
 
     if (EditMode == false) {
         return
