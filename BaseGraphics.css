@@ -94,3 +94,39 @@ body {
     opacity: 0.3;
     z-index: 4;
 }
+
+
+.top-box-1 {
+    height: 32px;
+    width: 48px;
+}
+
+.mid-box-1 {
+    width: 4px;
+}
+
+.mid-box-2 {
+    height: 80px;
+    width: 120px;
+}
+
+.low-box-1 {
+    width: 96px;
+}
+
+.basic-block {
+    background-color: #ffff;
+    height: 32px;
+    width: 32px;
+    border: 48px solid;
+
+    border-image: url("Sprites/Instances/Window/window.png");
+    border-image-slice: 55 fill;
+    border-radius: 40px;
+
+    resize: both;
+    overflow: auto;
+
+    min-width: 32px;
+    min-height: 32px;
+}

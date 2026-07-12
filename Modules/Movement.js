@@ -38,10 +38,10 @@ add_colision_data(BaseFloor)
 
 //Fim colisões
 
-function get_player_size() {
-    const rect = Player.getBoundingClientRect();
-    return { width: rect.width, height: rect.height };
-}
+// function get_player_size() {
+//     const rect = Player.getBoundingClientRect();
+//     return { width: rect.width, height: rect.height };
+// }
 
 function get_side(X, Y) {
     if (X) { if (Math.sign(X) == 1) { return "right" } else { return "left" } }
@@ -68,7 +68,8 @@ function get_side(X, Y) {
 
 export function place_meeting(offsetX, offsetY) {
 
-    const { width: PlayerWidth, height: PlayerHeight } = get_player_size()
+    const PlayerHeight = 64
+    const PlayerWidth = 64
 
     const pLeft = posX + offsetX;
     const pRight = posX + PlayerWidth + offsetX;
@@ -149,7 +150,7 @@ export function MoveX(_Left, _Right) {
     if (hitX) {
         if (HspdSign > 0) {
             posX = hitX.Left - 65
-        } else if(HspdSign < 0) {
+        } else if (HspdSign < 0) {
             posX = hitX.Right + 1
         }
         Hspd = 0

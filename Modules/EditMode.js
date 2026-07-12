@@ -99,26 +99,28 @@ export function edit_mode_preview() {
     }
 }
 
-const BuildTab = `
-            <div style="display: flex; flex-direction:column;">
-                    <div style="display: flex;">
-                        <img <img style=" height:32px; width:48px;" src="Sprites/Instances/Window01/corner1window.png">
-                        <img src="Sprites/Instances/Window01/width1window.png">
-                        <img src="Sprites/Instances/Window01/corner2window.png">
-                    </div>
-                    <div style="display: flex;">
-                        <img style=" width:4px;" src="Sprites/Instances/Window01/heightwindow.png">
-                        <img style=" height:80px; width:120px;" src="Sprites/Instances/Window01/contentwindow.png">
-                        <img style=" width:4px;" src="Sprites/Instances/Window01/heightwindow.png">
-                    </div>
-                    <div style="display: flex;">
-                        <img src="Sprites/Instances/Window01/corner3window.png">
-                        <img style=" width:96px;" src="Sprites/Instances/Window01/width2window.png">
-                        <img src="Sprites/Instances/Window01/corner4window.png">
-                    </div>
-                </div>
-            </div>
-            `
+const BuildTab = `</div>`
+// `
+//             <div style="display: flex; flex-direction:column;">
+//                     <div style="display: flex;">
+//                         <img class="top-box-1" src="Sprites/Instances/Window01/corner1window.png">
+//                         <img src="Sprites/Instances/Window01/width1window.png">
+//                         <img src="Sprites/Instances/Window01/corner2window.png">
+//                     </div>
+//                     <div style="display: flex;">
+//                         <img class="mid-box-1" src="Sprites/Instances/Window01/heightwindow.png">
+//                         <img class="mid-box-2" src="Sprites/Instances/Window01/contentwindow.png">
+//                         <img class="mid-box-1" src="Sprites/Instances/Window01/heightwindow.png">
+//                     </div>
+//                     <div style="display: flex;">
+//                         <img src="Sprites/Instances/Window01/corner3window.png">
+//                         <img class="low-box-1" src="Sprites/Instances/Window01/width2window.png">
+//                         <img src="Sprites/Instances/Window01/corner4window.png">
+//                     </div>
+//                 </div>
+//             </div>
+//             `
+
 
 export function edit_mode_click() {
     if (EditMode == false) {
@@ -143,7 +145,7 @@ export function edit_mode_click() {
 
             // Criação e indexação
             let NewElement = `
-            <div id="${NewElementId}" style="position: absolute; left:${left}; top:${top};" name="Sample">
+            <div class="basic-block" id="${NewElementId}" style="position: absolute; left:${left}; top:${top};" name="Sample">
             `+ BuildTab;
 
             FloorContainer.insertAdjacentHTML('beforeend', NewElement)
