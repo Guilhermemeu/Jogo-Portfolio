@@ -1,6 +1,6 @@
 
 import { get_grid_position } from "./GridModule.js";
-import { get_collisions, add_colision_data } from "./Movement.js";
+import { get_collisions, add_colision_data, remove_colision_data } from "./Movement.js";
 
 let TotalClicksEdit = 0;
 
@@ -11,7 +11,10 @@ let OldMYIG = 0;
 let LastElement = false;
 
 let NewElementId = 1;
+
 let FloorContainer = document.getElementById("floor-container");
+let OpenTabs = document.getElementById("open-tabs")
+
 let CanBuild = true;
 
 let EditMode = false;
@@ -26,16 +29,101 @@ document.addEventListener("mousemove", (event) => {
 })
 
 //  entra no edit mode
+let editWindow
+
+function update_edit_window() {
+    let cb = document.getElementById('create-button')
+    let rb = document.getElementById('remove-button')
+    let sb = document.getElementById('select-button')
+
+    cb.classList.remove("Active")
+    rb.classList.remove("Active")
+    sb.classList.remove("Active")
+
+
+    switch (EditMode) {
+        case "Create":
+            cb.classList.add("Active")
+            break;
+        case "Delete":
+            rb.classList.add("Active")
+            break;
+        case "Select":
+            sb.classList.add("Active")
+            break;
+
+        default:
+            alert("not working btw")
+            break
+    }
+}
+
+function open_edit_window() {
+    if (editWindow) {
+        editWindow.remove()
+        editWindow = false
+        return
+    }
+
+    let NewElement = `
+    <div class='edit-window' id="${NewElementId}" style="position:absolute; left:500px;" >
+        <div class='create-button' id='create-button'>
+        crio
+        </div>
+        <div class='remove-button' id='remove-button'>
+        removo
+        </div>
+        <div class='select-button' id='select-button'>
+        mexo
+        </div>
+    </div>
+    `
+    OpenTabs.insertAdjacentHTML('beforeend', NewElement)
+
+    editWindow = document.getElementById(String(NewElementId))
+    NewElementId += 1
+
+    let edit_buttons_press = editWindow.addEventListener("click", (event) => {
+        LastElement.remove()
+        console.log(event.target.id)
+        event = event.target.id
+        if (event == 'create-button') {
+            EditMode = "Create"
+            update_edit_window()
+        }
+        if (event == 'remove-button') {
+            EditMode = "Delete"
+            update_edit_window()
+        }
+        if (event == 'select-button') {
+            EditMode = "Select"
+            update_edit_window()
+        }
+
+
+    })
+
+    update_edit_window()
+
+}
 
 export function enter_edit_mode() {
     if (EditMode != false) {
         EditMode = false;
+
+        open_edit_window()
+        remove_colision_data(NewElementId)
+
         LastElement.remove()
         TotalClicksEdit = 0
         return;
     }
     if (EditMode == false) {
         EditMode = "Create";
+
+        open_edit_window()
+
+
         TotalClicksEdit += 1
         return;
     }
@@ -99,30 +187,9 @@ export function edit_mode_mousemove() {
     }
 }
 
-const BuildTab = `</div>`
-// `
-//             <div style="display: flex; flex-direction:column;">
-//                     <div style="display: flex;">
-//                         <img class="top-box-1" src="Sprites/Instances/Window01/corner1window.png">
-//                         <img src="Sprites/Instances/Window01/width1window.png">
-//                         <img src="Sprites/Instances/Window01/corner2window.png">
-//                     </div>
-//                     <div style="display: flex;">
-//                         <img class="mid-box-1" src="Sprites/Instances/Window01/heightwindow.png">
-//                         <img class="mid-box-2" src="Sprites/Instances/Window01/contentwindow.png">
-//                         <img class="mid-box-1" src="Sprites/Instances/Window01/heightwindow.png">
-//                     </div>
-//                     <div style="display: flex;">
-//                         <img src="Sprites/Instances/Window01/corner3window.png">
-//                         <img class="low-box-1" src="Sprites/Instances/Window01/width2window.png">
-//                         <img src="Sprites/Instances/Window01/corner4window.png">
-//                     </div>
-//                 </div>
-//             </div>
-//             `
-
 
 export function edit_mode_click() {
+
     if (EditMode == false) {
         return
     }
@@ -135,6 +202,15 @@ export function edit_mode_click() {
 
             if (CanBuild === false) { break; }
 
+            const check = document.getElementById('BuildPreview');
+            if (!check) {
+                break;
+            }
+
+            const isHovered = check.matches(':hover');
+            if (!isHovered) {
+                break;
+            }
 
             //Estilo e Posição
             let width = 128
@@ -146,7 +222,8 @@ export function edit_mode_click() {
             // Criação e indexação
             let NewElement = `
             <div class="basic-block" id="${NewElementId}" style="position: absolute; left:${left}; top:${top};" name="Sample">
-            `+ BuildTab;
+            </div>
+            `
 
             FloorContainer.insertAdjacentHTML('beforeend', NewElement)
 
@@ -159,7 +236,7 @@ export function edit_mode_click() {
             break;
         case "Delete":
             break;
-        case "Stretch":
+        case "Select":
             break;
 
         default:

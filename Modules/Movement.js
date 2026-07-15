@@ -31,6 +31,14 @@ export function add_colision_data(_Key) {
     })
     console.log(Collisions)
 }
+export function remove_colision_data(_key) {
+    for (let i = 0; i < Collisions.length; i++) {
+        let collidable = Collisions[i];
+        if (collidable.value == _key) {
+            Collisions.splice(i, 1)
+        }
+    }
+}
 
 //Adicionar colisões iniciais aqui
 let BaseFloor = document.getElementById("floor");

@@ -77,6 +77,14 @@ body {
 
 .icon-name {
     color: white;
+    font-family: 'pixelated';
+    font-size: .9rem;
+    text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+    ;
     width: auto;
     text-align: center;
     margin-top: -1px;
@@ -124,9 +132,68 @@ body {
     border-image-slice: 55 fill;
     border-radius: 40px;
 
-    resize: both;
+    /* resize: both;
     overflow: auto;
 
     min-width: 32px;
-    min-height: 32px;
+    min-height: 32px; */
+}
+
+.edit-window {
+    background-color: #ffff;
+    height: 8px;
+    width: 256px;
+    border: 48px solid;
+
+    display: flex;
+    justify-content: space-between;
+
+    border-image: url("Sprites/Instances/Window/window.png");
+    border-image-slice: 55 fill;
+    border-radius: 40px;
+
+    transition: opacity 0.15s ease;
+
+    z-index: 99999;
+}
+
+@starting-style {
+    .edit-window {
+        opacity: 0;
+    }
+}
+
+.edit-window div {
+    margin-top: -12px;
+    height:52px;
+    width: 52px;
+
+    display: flex;
+
+    text-align: center;
+
+    flex-direction: column;
+    justify-content: center;
+
+    background-color: #0000005e;
+
+}
+
+.Active {
+    background-color: green !important;
+}
+
+/* .create-button {}
+
+.remove-button {}
+
+.select-button {} */
+
+
+
+/* -- | Fonts | -- */
+
+@font-face {
+    font-family: 'pixelated';
+    src: url(Fonts/Gixel.ttf);
 }
