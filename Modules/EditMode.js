@@ -57,6 +57,7 @@ function update_edit_window() {
             break
     }
 }
+let edit_buttons_press = null   
 
 function open_edit_window() {
     if (editWindow) {
@@ -83,7 +84,7 @@ function open_edit_window() {
     editWindow = document.getElementById(String(NewElementId))
     NewElementId += 1
 
-    let edit_buttons_press = editWindow.addEventListener("click", (event) => {
+    edit_buttons_press = (event) => {
         LastElement.remove()
         console.log(event.target.id)
         event = event.target.id
@@ -99,9 +100,9 @@ function open_edit_window() {
             EditMode = "Select"
             update_edit_window()
         }
-
-
-    })
+        document.removeEventListener("click", edit_buttons_press)
+    }
+    editWindow.addEventListener("click", edit_buttons_press)
 
     update_edit_window()
 
@@ -186,6 +187,59 @@ export function edit_mode_mousemove() {
             break;
     }
 }
+// Funções do click aqui
+
+// cria janela
+function create_window() {
+    if (CanBuild === false) {
+        return false;
+    }
+
+    const check = document.getElementById('BuildPreview');
+    if (!check) {
+        return false;
+    }
+
+    const isHovered = check.matches(':hover');
+    if (!isHovered) {
+        return false;
+    }
+
+    //Estilo e Posição
+    let width = 128
+    let height = 128
+
+    let left = ((get_grid_position(MouseX + window.scrollX, width))) + 'px'
+    let top = ((get_grid_position(MouseY + window.scrollY, height))) + 'px'
+
+    // Criação e indexação
+    let NewElement = `
+            <div class="basic-block" id="${NewElementId}" style="position: absolute; left:${left}; top:${top};" name="Sample">
+            </div>
+            `
+
+    FloorContainer.insertAdjacentHTML('beforeend', NewElement)
+
+    let Element = document.getElementById(String(NewElementId))
+
+    add_colision_data(Element)
+    NewElementId += 1
+
+    CanBuild = false
+    return true
+}
+
+// fecha janela
+let click_to_delete = null
+function delete_window() {
+
+    click_to_delete = (event) => {
+        console.log(event.target)
+
+        document.removeEventListener("click", click_to_delete)
+    }
+    document.addEventListener("click", click_to_delete)
+}
 
 
 export function edit_mode_click() {
@@ -199,42 +253,18 @@ export function edit_mode_click() {
     }
     switch (EditMode) {
         case "Create":
-
-            if (CanBuild === false) { break; }
-
-            const check = document.getElementById('BuildPreview');
-            if (!check) {
-                break;
+            if (create_window()) {
+                console.log("Construiu")
+            } else {
+                console.log("Não Construiu")
             }
-
-            const isHovered = check.matches(':hover');
-            if (!isHovered) {
-                break;
-            }
-
-            //Estilo e Posição
-            let width = 128
-            let height = 128
-
-            let left = ((get_grid_position(MouseX + window.scrollX, width))) + 'px'
-            let top = ((get_grid_position(MouseY + window.scrollY, height))) + 'px'
-
-            // Criação e indexação
-            let NewElement = `
-            <div class="basic-block" id="${NewElementId}" style="position: absolute; left:${left}; top:${top};" name="Sample">
-            </div>
-            `
-
-            FloorContainer.insertAdjacentHTML('beforeend', NewElement)
-
-            let Element = document.getElementById(String(NewElementId))
-
-            add_colision_data(Element)
-            NewElementId += 1
-
-            CanBuild = false
             break;
         case "Delete":
+            if (delete_window()) {
+                console.log("Deletou")
+            } else {
+                console.log("Não Deletou")
+            }
             break;
         case "Select":
             break;
