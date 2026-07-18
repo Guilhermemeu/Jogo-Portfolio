@@ -142,7 +142,6 @@ export function enter_edit_mode() {
         return;
     }
 }
-let hasSelected
 let lastTarget
 
 export function edit_mode_mousemove(event) {
@@ -202,24 +201,28 @@ export function edit_mode_mousemove(event) {
             break;
 
         case "Delete":
-            if (event.target.className != "basic-block") {
-                if (hasSelected) {
-                    lastTarget.style.backgroundColor = "#ffff";
-                    hasSelected = false
+            if (!event.target.classList.contains("basic-block")) {
+
+                if (lastTarget != event.target) {
+
+                    if (!lastTarget) { break }
+
+                    lastTarget.classList.remove("red")
                     lastTarget = false
                 }
                 break;
             }
-            if (hasSelected) {
-                break;
-            }
+
             if (lastTarget == event.target) {
                 break;
             }
 
-            event.target.style.backgroundColor = "#000"
+            if (lastTarget != event.target && lastTarget) {
+                lastTarget.classList.remove("red")
+            }
+
+            event.target.classList.add("red")
             lastTarget = event.target
-            hasSelected = true
 
 
             break;
@@ -273,15 +276,20 @@ function delete_window() {
 
     click_to_delete = () => {
         if (!lastTarget) {
-            return;
+            return false;
         }
+        remove_colision_data(lastTarget.id)
         lastTarget.remove()
+        return true;
 
         document.removeEventListener("click", click_to_delete)
     }
     document.addEventListener("click", click_to_delete)
 }
 
+function select_window(event) {
+
+}
 
 export function edit_mode_click(event) {
 
@@ -301,13 +309,10 @@ export function edit_mode_click(event) {
             }
             break;
         case "Delete":
-            if (delete_window()) {
-                console.log("Deletou")
-            } else {
-                console.log("Não Deletou")
-            }
+            delete_window()
             break;
         case "Select":
+            select_window(event)
             break;
 
         default:

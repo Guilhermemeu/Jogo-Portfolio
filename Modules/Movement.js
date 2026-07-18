@@ -34,7 +34,9 @@ export function add_colision_data(_Key) {
 export function remove_colision_data(_key) {
     for (let i = 0; i < Collisions.length; i++) {
         let collidable = Collisions[i];
-        if (collidable.value == _key) {
+        console.log(collidable.Id)
+
+        if (collidable.Id == _key) {
             Collisions.splice(i, 1)
         }
     }

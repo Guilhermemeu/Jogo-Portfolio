@@ -136,11 +136,16 @@ body {
     border-image-slice: 55 fill;
     border-radius: 40px;
 
+
     /* resize: both;
     overflow: auto;
 
     min-width: 32px;
     min-height: 32px; */
+}
+
+.basic-block.red {
+    filter: hue-rotate(120deg);
 }
 
 .edit-window {
