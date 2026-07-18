@@ -69,7 +69,7 @@ function open_edit_window() {
     }
 
     let NewElement = `
-    <div class='edit-window' id="${NewElementId}" style="position:absolute; left:500px;" >
+    <div class='edit-window movable' id="${NewElementId}" style="position:absolute; left:500px;" >
         <div class='create-button' id='create-button'>
         crio
         </div>
@@ -87,7 +87,11 @@ function open_edit_window() {
     NewElementId += 1
 
     edit_buttons_press = (event) => {
-        LastElement.remove()
+
+        if (LastElement) {
+            LastElement.remove()
+        }
+
         event = event.target.id
         if (event == 'create-button') {
             if (EditMode == "Create") {
@@ -120,23 +124,23 @@ function open_edit_window() {
     update_edit_window()
 
 }
-
+let isOpen = false
 export function enter_edit_mode() {
-    if (EditMode != false) {
+    if (isOpen == true) {
+        isOpen = false
         EditMode = false;
 
         open_edit_window()
-        remove_colision_data(NewElementId)
 
-        LastElement.remove()
+        if (LastElement) {
+            LastElement.remove()
+        }
         TotalClicksEdit = 0
         return;
     }
-    if (EditMode == false) {
-        EditMode = "Create";
+    if (isOpen == false) {
 
         open_edit_window()
-
 
         TotalClicksEdit += 1
         return;
