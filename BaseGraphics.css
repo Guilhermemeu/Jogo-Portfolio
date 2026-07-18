@@ -1,6 +1,10 @@
-img {
+* {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     user-select: none;
     -webkit-user-drag: none;
+
 }
 
 
@@ -165,7 +169,7 @@ body {
 
 .edit-window div {
     margin-top: -12px;
-    height:52px;
+    height: 52px;
     width: 52px;
 
     display: flex;

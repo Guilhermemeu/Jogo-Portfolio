@@ -51,13 +51,15 @@ function update_edit_window() {
         case "Select":
             sb.classList.add("Active")
             break;
-
+        case false:
+            console.log("Unselected the type of edit mode")
+            break;
         default:
             alert("not working btw")
             break
     }
 }
-let edit_buttons_press = null   
+let edit_buttons_press = null
 
 function open_edit_window() {
     if (editWindow) {
@@ -86,18 +88,29 @@ function open_edit_window() {
 
     edit_buttons_press = (event) => {
         LastElement.remove()
-        console.log(event.target.id)
         event = event.target.id
         if (event == 'create-button') {
-            EditMode = "Create"
+            if (EditMode == "Create") {
+                EditMode = false
+            } else {
+                EditMode = "Create"
+            }
             update_edit_window()
         }
         if (event == 'remove-button') {
-            EditMode = "Delete"
+            if (EditMode == "Delete") {
+                EditMode = false
+            } else {
+                EditMode = "Delete"
+            }
             update_edit_window()
         }
         if (event == 'select-button') {
-            EditMode = "Select"
+            if (EditMode == "Select") {
+                EditMode = false
+            } else {
+                EditMode = "Select"
+            }
             update_edit_window()
         }
         document.removeEventListener("click", edit_buttons_press)
@@ -129,11 +142,13 @@ export function enter_edit_mode() {
         return;
     }
 }
+let hasSelected
+let lastTarget
 
-export function edit_mode_mousemove() {
+export function edit_mode_mousemove(event) {
 
     if (EditMode == false) {
-        return
+        return;
     }
 
     switch (EditMode) {
@@ -185,6 +200,29 @@ export function edit_mode_mousemove() {
 
             }
             break;
+
+        case "Delete":
+            if (event.target.className != "basic-block") {
+                if (hasSelected) {
+                    lastTarget.style.backgroundColor = "#ffff";
+                    hasSelected = false
+                    lastTarget = false
+                }
+                break;
+            }
+            if (hasSelected) {
+                break;
+            }
+            if (lastTarget == event.target) {
+                break;
+            }
+
+            event.target.style.backgroundColor = "#000"
+            lastTarget = event.target
+            hasSelected = true
+
+
+            break;
     }
 }
 // Funções do click aqui
@@ -233,8 +271,11 @@ function create_window() {
 let click_to_delete = null
 function delete_window() {
 
-    click_to_delete = (event) => {
-        console.log(event.target)
+    click_to_delete = () => {
+        if (!lastTarget) {
+            return;
+        }
+        lastTarget.remove()
 
         document.removeEventListener("click", click_to_delete)
     }
@@ -242,7 +283,7 @@ function delete_window() {
 }
 
 
-export function edit_mode_click() {
+export function edit_mode_click(event) {
 
     if (EditMode == false) {
         return
