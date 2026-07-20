@@ -69,7 +69,7 @@ function open_edit_window() {
     }
 
     let NewElement = `
-    <div class='edit-window movable' id="${NewElementId}" style="position:absolute; left:500px;" >
+    <div class='edit-window movable' id="${NewElementId}" style="position:absolute; top:0px; left:500px;" >
         <div class='create-button' id='create-button'>
         crio
         </div>
@@ -232,7 +232,8 @@ export function edit_mode_mousemove(event) {
             break;
     }
 }
-// Funções do click aqui
+
+// Funções do click aqui ☺
 
 // cria janela
 function create_window() {
@@ -291,6 +292,7 @@ function delete_window() {
     document.addEventListener("click", click_to_delete)
 }
 
+// seleciona janela
 function select_window(event) {
 
 }
